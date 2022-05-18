@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:textify/controller/user_controller.dart';
 import 'package:textify/screens/login_screen.dart';
 import 'package:textify/screens/home_screen.dart';
 import 'package:textify/screens/idinput_screen.dart';
@@ -18,7 +20,20 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData.dark(),
-      home: LogInScreen(),
+      home: FutureBuilder(
+        future: UserController.getID(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            if(snapshot.data == "Not found") {
+              return LogInScreen();
+            } else {
+              return HomeScreen();
+            }
+          } else {
+            return const Scaffold(body: Center(child: CircularProgressIndicator()));
+          }
+        },
+      ),
     );
   }
 }

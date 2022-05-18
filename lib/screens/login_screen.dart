@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:textify/controller/user_controller.dart';
 import 'package:textify/utils/colors.dart';
 import 'package:textify/screens/home_screen.dart';
 import 'package:textify/screens/idinput_screen.dart';
@@ -12,6 +14,8 @@ class LogInScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    UserController controller = UserController();
+
     return Scaffold(
       body: Container(
         width: double.infinity,
@@ -23,6 +27,13 @@ class LogInScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              Image.asset(
+                "assets/icon.jpeg",
+                width: 400,
+              ),
+              const SizedBox(
+                height: 30,
+              ),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
@@ -41,15 +52,18 @@ class LogInScreen extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return HomeScreen();
-                          },
-                        ),
-                      );
+                    onPressed: () async {
+                      final String response = await controller.signUp();
+                      if (response == "success") {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return HomeScreen();
+                            },
+                          ),
+                        );
+                      }
                     },
                     child: const Text("Sign Up")),
               ),

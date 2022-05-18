@@ -1,21 +1,48 @@
 import 'package:flutter/material.dart';
+import 'package:textify/screens/add_text_screen.dart';
 import 'package:textify/screens/settings_screen.dart';
 import 'package:textify/utils/colors.dart';
 import 'package:textify/screens/text_screen.dart';
+import 'package:textify/controller/text_controller.dart';
+import 'package:textify/utils/util.dart';
 
+import 'package:textify/models/text_model.dart' as textModel;
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({
     Key? key,
   }) : super(key: key);
 
   @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  Future<List<textModel.Text>> texts = TextController.getTexts();
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => AddTextScreen()));
+          },
+          child: Icon(Icons.add)),
       appBar: AppBar(
         backgroundColor: mobileBackground,
         title: const Text("Textify"),
+        leading: Container(),
         actions: [
+          IconButton(
+            icon: Icon(Icons.refresh),
+            onPressed: () {
+              setState(() {
+                texts = TextController.getTexts();
+              });
+            },
+          ),
           IconButton(
             icon: Icon(Icons.settings),
             onPressed: () {
@@ -35,28 +62,58 @@ class HomeScreen extends StatelessWidget {
           )
         ],
       ),
-      body: Container(
-        color: mobileBackground,
-        child: ListView(children: [
-          TextWidget(
-            textSubtitle: "Password",
-            textTitle: "Example text",
-            textIcon: const Icon(Icons.password),
-            borderColor: Colors.redAccent,
-          ),
-          TextWidget(
-            textSubtitle: "Code",
-            textTitle: "public static void main()",
-            textIcon: const Icon(Icons.code),
-            borderColor: Colors.purpleAccent,
-          ),
-          TextWidget(
-            textSubtitle: "Command",
-            textTitle: "Battery 0: Discharging, 47%",
-            textIcon: const Icon(Icons.code_off),
-            borderColor: Colors.blueAccent,
-          ),
-        ]),
+      body: FutureBuilder(
+        future: texts,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            // print(snapshot.data);
+            if (snapshot.hasData == false) {
+              // showSnackbar(context, "Error retrieving texts");
+              debugPrint(snapshot.error.toString());
+              return Container(
+                  decoration: const BoxDecoration(
+                    color: mobileBackground,
+                  ),
+                  child: const Center(child: Text("Error!")));
+            } else {
+              return ContentWidget(
+                  texts: snapshot.data as List<textModel.Text>);
+            }
+          } else {
+            return Container(
+                decoration: const BoxDecoration(
+                  color: mobileBackground,
+                ),
+                child: const Center(child: CircularProgressIndicator()));
+          }
+        },
+      ),
+    );
+  }
+}
+
+class ContentWidget extends StatelessWidget {
+  final List<textModel.Text> texts;
+
+  const ContentWidget({
+    Key? key,
+    required List<textModel.Text> this.texts,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: mobileBackground,
+      child: ListView.builder(
+        itemCount: texts.length,
+        itemBuilder: (context, index) {
+          return TextWidget(
+            textSubtitle: texts[index].type,
+            textTitle: texts[index].content,
+            textIcon: getIcon(texts[index].type),
+            borderColor: getMapping(texts[index].type),
+          );
+        },
       ),
     );
   }
