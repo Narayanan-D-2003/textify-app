@@ -1,16 +1,43 @@
-# textify
+<div align="center">
 
-A new Flutter project.
+# Textify
 
-## Getting Started
+![License](https://img.shields.io/github/license/pspiagicw/textify?style=for-the-badge)
+![Issues](https://img.shields.io/github/issues/pspiagicw/textify-app?style=for-the-badge)
 
-This project is a starting point for a Flutter application.
+</div>
 
-A few resources to get you started if this is your first Flutter project:
+This is the official repository for the Textify app. 
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Installation
+### Requirements
+- Flutter
+- Dart
+- JDK11
+For compiling on MacOS/Windows/iOS compilation see flutter documentation
+
+
+### Compilation
+Once all the dependencies are satisfied , use `flutter build` command to build the respective binary.
+
+For Android
+`flutter build apk`
+
+For Linux
+`flutter build linux`
+
+For MacOS/Windows/iOS see flutter documentation.
+
+## Usage
+After installation you can perform anonymous login without login needed.This will generate a unique ID which will be used to identify you. Do not share this UID with anybody!!
+
+For sharing with other users , we will provide a separate ID called SUID (Share Unique ID) which is safe to share.
+
+On the home page , you can access the settings screen. You can see all the texts uploaded on the settings screen.
+
+Future instructions can be found on the screen.
+
+## Bugs/Feature Requests
+
+Bugs and Feature Requests can be raised either by raising Issue on the GitHub Repository
